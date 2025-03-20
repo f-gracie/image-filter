@@ -18,8 +18,10 @@ include_directories(
 add_executable(main
     src/main.cpp
     src/filters/edge_detection.cpp
-    src/filters/gaussian_blur.cpp     
-    src/filters/hdr_tone_mapping.cpp  
+    src/filters/gaussian_blur.cpp
+    src/filters/hdr_tone_mapping.cpp
+    src/filters/vintage.cpp
+    src/filters/cartoon.cpp
     src/utils/on_screen_display.cpp
 )
 

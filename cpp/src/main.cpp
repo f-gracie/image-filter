@@ -3,19 +3,26 @@
 #include "filters/edge_detection.hpp"
 #include "filters/gaussian_blur.hpp"
 #include "filters/hdr_tone_mapping.hpp"
+#include "filters/vintage.hpp"
+#include "filters/cartoon.hpp"
 #include "utils/on_screen_display.hpp"
+
 
 // 定义滤镜类型枚举
 enum FilterType {
     EDGE_DETECTION,
     GAUSSIAN_BLUR,
-    HDR_TONE_MAPPING
+    HDR_TONE_MAPPING,
+    VINTAGE,
+    CARTOON
 };
 
 const std::map<FilterType, std::string> FILTER_NAMES = {
     {EDGE_DETECTION, "Edge Detection"},
     {GAUSSIAN_BLUR, "Gaussian Blur"},
-    {HDR_TONE_MAPPING, "HDR Tone Mapping"}
+    {HDR_TONE_MAPPING, "HDR Tone Mapping"},
+    {VINTAGE, "Vintage Effect"},
+    {CARTOON, "Cartoon Effect"}
 };
 
 
@@ -40,8 +47,8 @@ int main() {
         if (key == '1') current_filter = EDGE_DETECTION;
         else if (key == '2') current_filter = GAUSSIAN_BLUR;
         else if (key == '3') current_filter = HDR_TONE_MAPPING;
-
-        std::cout << "当前滤镜: " << current_filter << std::endl;
+        else if (key == '4') current_filter = VINTAGE;
+        else if (key == '5') current_filter = CARTOON;
 
         // 应用对应滤镜
         cv::Mat filtered;
@@ -51,6 +58,12 @@ int main() {
                 break;
             case GAUSSIAN_BLUR:
                 filtered = apply_gaussian_blur(frame, 7); // 使用7x7高斯核
+                break;
+            case VINTAGE:
+                filtered = apply_vintage_effect(frame);
+                break;
+            case CARTOON:
+                filtered = apply_cartoon_effect(frame);
                 break;
             case HDR_TONE_MAPPING:
                 // 注意：HDR处理前需归一化输入
