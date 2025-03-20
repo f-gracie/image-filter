@@ -4,6 +4,7 @@
 void OSDUtils::draw_filter_status(
     cv::Mat& image,
     const std::string& filter_name,
+    double process_time,
     cv::Point position,
     cv::Scalar text_color,
     cv::Scalar bg_color
@@ -41,6 +42,33 @@ void OSDUtils::draw_filter_status(
         font_scale,
         text_color,
         thickness,
+        cv::LINE_AA
+    );
+
+    // 在滤镜名称下方添加耗时
+    std::string time_text = "Time: " + std::to_string(process_time).substr(0,4) + " ms";
+    cv::putText(
+        image,
+        time_text,
+        cv::Point(position.x, position.y + 50),  // Y坐标下移
+        font_face,
+        font_scale * 0.8,  // 字体稍小
+        text_color,
+        thickness,
+        cv::LINE_AA
+    );
+}
+
+void OSDUtils::draw_fps(cv::Mat& image, double fps, cv::Point position) {
+    std::string fps_text = "FPS: " + std::to_string((int)fps);
+    cv::putText(
+        image,
+        fps_text,
+        position,
+        cv::FONT_HERSHEY_SIMPLEX,
+        0.6,                  // 字体大小
+        cv::Scalar(0, 255, 0),// 颜色（绿色）
+        2,                    // 线宽
         cv::LINE_AA
     );
 }

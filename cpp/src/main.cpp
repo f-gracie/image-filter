@@ -6,6 +6,7 @@
 #include "filters/vintage.hpp"
 #include "filters/cartoon.hpp"
 #include "utils/on_screen_display.hpp"
+#include <chrono>  // 必须包含的头文件
 
 
 // 定义滤镜类型枚举
@@ -26,8 +27,13 @@ const std::map<FilterType, std::string> FILTER_NAMES = {
 };
 
 
-// 全局变量：当前选中的滤镜
+// 全局变量
+// 当前选中的滤镜
 FilterType current_filter = EDGE_DETECTION;
+// 计算帧率用到的变量
+auto last_time = std::chrono::steady_clock::now();  // 上一次记录时间
+int frame_count = 0;                                // 累计帧数
+double current_fps = 0.0;                           // 当前计算的帧率
 
 int main() {
     // 打开默认摄像头（索引0）
@@ -50,6 +56,8 @@ int main() {
         else if (key == '4') current_filter = VINTAGE;
         else if (key == '5') current_filter = CARTOON;
 
+        // 滤镜处理耗时统计
+        auto start = std::chrono::high_resolution_clock::now();
         // 应用对应滤镜
         cv::Mat filtered;
         switch (current_filter) {
@@ -73,11 +81,28 @@ int main() {
                 break;
         }
 
+        // 滤镜处理耗时计算
+        auto end = std::chrono::high_resolution_clock::now();
+        double process_time = std::chrono::duration<double, std::milli>(end - start).count();
+
+        // --- 帧率计算部分 ---
+        auto current_time = std::chrono::steady_clock::now();
+        double elapsed_sec = std::chrono::duration<double>(current_time - last_time).count();
+        frame_count++;
+
+        // 每1秒更新一次帧率（避免频繁刷新）
+        if (elapsed_sec >= 1.0) {
+            current_fps = frame_count / elapsed_sec;
+            frame_count = 0;
+            last_time = current_time;
+        }
+
         // 获取当前滤镜名称
         std::string filter_name = FILTER_NAMES.at(current_filter);
         // 左上角矩形显示滤镜名称
-        // display_filter_name(filter_name, filtered);
-        OSDUtils::draw_filter_status(filtered, filter_name);
+        OSDUtils::draw_filter_status(filtered, filter_name, process_time);
+        // 左上角显示帧率
+        OSDUtils::draw_fps(filtered, current_fps);
         // 显示滤镜结果
         cv::imshow(filter_name, filtered);
 
