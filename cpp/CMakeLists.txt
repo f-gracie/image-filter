@@ -4,9 +4,13 @@ project(RealTimeFilter)
 
 # 指定 OpenCV 路径（Homebrew 安装路径）
 set(OpenCV_DIR "/opt/homebrew/opt/opencv@4/share/OpenCV")
+set(CMAKE_CXX_STANDARD 11)
 
 # 查找 OpenCV 库
 find_package(OpenCV REQUIRED)
+
+# 查找线程库
+find_package(Threads REQUIRED)
 
 # 包含头文件
 include_directories(
@@ -27,3 +31,5 @@ add_executable(main
 
 # 链接 OpenCV 库
 target_link_libraries(main ${OpenCV_LIBS})
+# 链接 线程库
+target_link_libraries(main ${CMAKE_THREAD_LIBS_INIT})
