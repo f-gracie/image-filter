@@ -19,7 +19,7 @@ include_directories(
 )
 
 # 生成可执行文件
-add_executable(main
+add_executable(RealTimeVideoFilter
     src/main.cpp
     src/filters/edge_detection.cpp
     src/filters/gaussian_blur.cpp
@@ -30,6 +30,6 @@ add_executable(main
 )
 
 # 链接 OpenCV 库
-target_link_libraries(main ${OpenCV_LIBS})
+target_link_libraries(RealTimeVideoFilter ${OpenCV_LIBS})
 # 链接 线程库
-target_link_libraries(main ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(RealTimeVideoFilter ${CMAKE_THREAD_LIBS_INIT})

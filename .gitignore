@@ -39,3 +39,6 @@ python/
 
 # build
 build/
+
+# venv
+venv/
